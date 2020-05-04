@@ -5,7 +5,7 @@
 #include "protocol.h"
 #include "datalink.h"
 
-//#define DATA_TIMER 3000								//Data帧超时时间
+#define DATA_TIMER 3000								//Data帧超时时间
 #define ACK_TIMER 240								//ACK帧超时时间
 
 #define MAX_SEQ 31										//帧的序号空间，应当为2^n-1
@@ -151,9 +151,9 @@ void selective(int argc, char** argv)
 	int event;
 	int oldest_frame = MAX_SEQ+1;
 	int i;
-	int DATA_TIMER = 3000;
-	int bits_received, error_received;
-	bool low_error
+	//int DATA_TIMER = 3000;
+	//int bits_received, error_received;
+	//bool low_error
 	for (i = 0; i < NR_BUFS; i++)	arrived[i] = false;
 
 	nbuffered = 0;
@@ -182,7 +182,7 @@ void selective(int argc, char** argv)
 
 		case FRAME_RECEIVED:
 			len = recv_frame((unsigned char*)& f, sizeof f);
-			bits_received += len * 8;
+			//bits_received += len * 8;
 			if (len < 5 || crc32((unsigned char*)& f, len) != 0) { //帧损坏
 				dbg_event("**** Receiver Error, Bad CRC Checksum\n");
 				if (no_nak) {
@@ -250,7 +250,8 @@ void selective(int argc, char** argv)
 			enable_network_layer();
 		else
 			disable_network_layer();
-		if ((error_received << 22) < bits_received) {
+		
+		/*if ((error_received << 22) < bits_received) {
 			low_error = true;
 		}
 		else {
@@ -265,7 +266,7 @@ void selective(int argc, char** argv)
 		}
 		else {
 			DATA_TIMER = 5000;
-		}
+		}*/
 	}
 }
 
